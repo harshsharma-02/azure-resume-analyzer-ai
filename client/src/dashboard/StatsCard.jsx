@@ -1,63 +1,28 @@
 import { motion } from "framer-motion";
 
-function StatsCard({
-  icon: Icon,
-  title,
-  value,
-  change,
-  color,
-}) {
+function StatsCard({ icon: Icon, title, value, change, accent = "#7ea8ff", index = 0 }) {
   return (
     <motion.div
-      whileHover={{
-        y: -6,
-        scale: 1.02,
-      }}
-      transition={{
-        duration: 0.25,
-      }}
-      className="
-      rounded-3xl
-      border
-      border-slate-200
-      bg-white
-      p-6
-      shadow-lg
-      "
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.08, duration: 0.5 }}
+      whileHover={{ y: -4 }}
+      className="glass hover-lift p-6 relative overflow-hidden"
     >
-      <div className="flex items-center justify-between">
+      <div aria-hidden className="absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-40 blur-3xl" style={{ background: `radial-gradient(circle, ${accent}, transparent 65%)` }} />
 
+      <div className="flex items-start justify-between relative">
         <div>
-
-          <p className="text-slate-500">
-            {title}
-          </p>
-
-          <h2 className="mt-3 text-4xl font-black">
-            {value}
-          </h2>
-
-          <p className="mt-3 text-green-600 font-medium">
+          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#7c8db0]">{title}</div>
+          <div className="mt-3 font-display text-5xl text-white">{value}</div>
+          <div className="mt-2 flex items-center gap-1.5 text-xs text-[#a5b4d0]">
+            <span className="h-1 w-1 rounded-full" style={{ background: accent }} />
             {change}
-          </p>
-
+          </div>
         </div>
-
-        <div
-          className={`
-          flex
-          h-16
-          w-16
-          items-center
-          justify-center
-          rounded-2xl
-          ${color}
-          text-white
-          `}
-        >
-          <Icon size={30}/>
+        <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5">
+          <Icon size={18} style={{ color: accent }} />
         </div>
-
       </div>
     </motion.div>
   );

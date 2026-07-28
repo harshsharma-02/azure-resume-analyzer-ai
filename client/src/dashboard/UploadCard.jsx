@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { UploadCloud } from "lucide-react";
+import { UploadCloud, FileCheck2 } from "lucide-react";
+import { motion } from "framer-motion";
 import API from "../api/axios";
 
 function UploadCard() {
@@ -11,115 +12,64 @@ function UploadCard() {
   const handleUpload = async (file) => {
     try {
       setUploading(true);
-      setStatus("Uploading resume...");
+      setStatus("Uploading resume…");
       setFileName(file.name);
-
       const formData = new FormData();
-
       formData.append("resume", file);
-
       const uploadResponse = await API.post("/resume/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
-
       const resumeId = uploadResponse.data.resume._id;
-
-      setStatus("Analyzing resume...");
-
+      setStatus("Analyzing resume…");
       await API.post(`/resume/analyze/${resumeId}`);
-
-      setStatus("Generating AI feedback...");
-
+      setStatus("Generating AI feedback…");
       await API.post(`/ai/${resumeId}`);
-
-      setStatus("Resume analyzed successfully ✅");
-
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      setStatus("Resume analyzed successfully");
+      setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
-      console.log("UPLOAD ERROR:", error);
-
-      console.log("SERVER MESSAGE:", error.response?.data);
-
-      setStatus(
-        error.response?.data?.message ||
-          error.message ||
-          "Something went wrong",
-      );
+      setStatus(error.response?.data?.message || error.message || "Something went wrong");
     } finally {
       setUploading(false);
     }
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: {
-      "application/pdf": [".pdf"],
-    },
-
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: { "application/pdf": [".pdf"] },
     multiple: false,
-
-    onDrop: (files) => {
-      if (files.length > 0) {
-        handleUpload(files[0]);
-      }
-    },
+    onDrop: (files) => files.length > 0 && handleUpload(files[0]),
   });
 
   return (
-    <>
-      <div
-        {...getRootProps()}
-        className="
-      cursor-pointer
-      rounded-3xl
-      border-2
-      border-dashed
-      border-blue-300
-      bg-white
-      p-12
-      text-center
-      transition
-      hover:border-blue-500
-      hover:bg-blue-50
-      "
-      >
-        <input {...getInputProps()} />
+    <motion.div
+      {...getRootProps()}
+      whileHover={{ y: -3 }}
+      data-testid="upload-card"
+      className={`glass hover-lift cursor-pointer p-8 text-center border-dashed transition ${
+        isDragActive ? "!border-[#7ea8ff] bg-[#7ea8ff]/5" : ""
+      }`}
+      style={{ borderStyle: "dashed" }}
+    >
+      <input {...getInputProps()} />
 
-        <UploadCloud size={60} className="mx-auto text-blue-600" />
-
-        <h2 className="mt-6 text-2xl font-bold">Upload Resume</h2>
-
-        <p className="mt-3 text-slate-500">Drag & drop your PDF here</p>
-
-        <button
-          type="button"
-          className="
-        mt-8
-        rounded-xl
-        bg-blue-600
-        px-6
-        py-3
-        text-white
-        hover:bg-blue-700
-        "
-        >
-          Browse Files
-        </button>
-
-        {fileName && <p className="mt-5 text-sm text-slate-600">{fileName}</p>}
-
-        {uploading && (
-          <p className="mt-3 text-blue-600 font-semibold">Processing...</p>
-        )}
-
-        {status && (
-          <p className="mt-3 text-green-600 font-semibold">{status}</p>
-        )}
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#4a7dff]/20 to-[#22d3ee]/20 border border-white/10 relative">
+        <UploadCloud size={28} className="text-[#7ea8ff]" />
+        {!uploading && <span className="absolute inset-0 rounded-2xl pulse-ring" />}
       </div>
-    </>
+
+      <h2 className="mt-6 font-display text-3xl text-white">Upload Resume</h2>
+      <p className="mt-2 text-sm text-[#a5b4d0]">Drag & drop your PDF here, or click to browse</p>
+
+      <button type="button" className="btn-primary mt-6 mx-auto !py-3 !text-sm">Browse files</button>
+
+      {fileName && (
+        <div className="mt-6 inline-flex items-center gap-2 text-xs font-mono text-[#a5b4d0] bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
+          <FileCheck2 size={13} className="text-[#67e8f9]" /> {fileName}
+        </div>
+      )}
+      {status && (
+        <p className="mt-4 text-sm text-[#67e8f9] font-mono">{status}{uploading && "…"}</p>
+      )}
+    </motion.div>
   );
 }
 

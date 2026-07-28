@@ -1,65 +1,41 @@
 import generateReport from "../utils/generateReport";
-
 import { Upload, FileSearch, Download, Briefcase } from "lucide-react";
+import { motion } from "framer-motion";
 
 const actions = [
-  {
-    icon: Upload,
-    title: "Upload Resume",
-  },
-
-  {
-    icon: FileSearch,
-    title: "Analyze Resume",
-  },
-
-  {
-    icon: Briefcase,
-    title: "Job Match",
-  },
-
-  {
-    icon: Download,
-    title: "Download Report",
-  },
+  { icon: Upload, title: "Upload Resume" },
+  { icon: FileSearch, title: "Analyze Resume" },
+  { icon: Briefcase, title: "Job Match" },
+  { icon: Download, title: "Download Report" },
 ];
 
 function QuickActions({ resume }) {
   const handleAction = (title) => {
     if (title === "Download Report") {
-      if (!resume) {
-        alert("No resume found.");
-        return;
-      }
-
+      if (!resume) return alert("No resume found.");
       generateReport(resume);
     }
   };
-  return (
-    <div className=" rounded-3xl bg-white p-8 shadow-lg">
-      <h2 className=" mb-8 text-2xl font-bold">Quick Actions</h2>
 
-      <div className="grid grid-cols-2 gap-5">
+  return (
+    <div className="glass p-6">
+      <div className="eyebrow">— Shortcuts</div>
+      <h2 className="mt-2 font-display text-2xl text-white">Quick Actions</h2>
+
+      <div className="mt-5 grid grid-cols-2 gap-3">
         {actions.map((action) => {
           const Icon = action.icon;
-
           return (
-            <button
+            <motion.button
               key={action.title}
+              whileHover={{ y: -3 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => handleAction(action.title)}
-              className="
-  rounded-2xl
-  border
-  p-6
-  transition
-  hover:border-blue-600
-  hover:bg-blue-50
-"
+              className="group rounded-2xl border border-white/8 bg-white/[0.03] p-4 hover:border-[#7ea8ff]/30 hover:bg-white/[0.05] transition text-left"
             >
-              <Icon size={28} className="mx-auto text-blue-600" />
-
-              <p className="mt-4">{action.title}</p>
-            </button>
+              <Icon size={18} className="text-[#7ea8ff]" />
+              <p className="mt-3 text-sm text-white font-medium">{action.title}</p>
+            </motion.button>
           );
         })}
       </div>

@@ -1,118 +1,105 @@
 import { motion } from "framer-motion";
-import { ArrowRight, PlayCircle } from "lucide-react";
-import Button from "./Button";
+import { ArrowUpRight, PlayCircle, Sparkles } from "lucide-react";
 import DashboardPreview from "./DashboardPreview";
+import { Link } from "react-router-dom";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: (i = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.7, ease: [0.2, 0.7, 0.2, 1] },
+  }),
+};
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden">
+    <section className="page-container relative overflow-hidden pt-2 lg:pt-20">
+       <div className="mx-auto w-full px-8 xl:px-12">
+        <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-16 lg:gap-10 items-center pb-16 lg:pb-20">
+          {/* LEFT */}
+          <motion.div initial="hidden" animate="show" className="max-w-2xl">
+            <motion.div
+              variants={fadeUp}
+              custom={0}
+              className="inline-flex items-center gap-2 chip"
+            >
+              <Sparkles size={12} className="text-[#7ea8ff]" />
+              Powered by Azure OpenAI
+            </motion.div>
 
-      <div className="mx-auto flex min-h-[90vh] max-w-7xl flex-col items-center justify-between gap-20 px-6 py-24 lg:flex-row">
+            <motion.h1
+              variants={fadeUp}
+              custom={1}
+              className="mt-8 font-display text-[62px] leading-[0.95] tracking-tight text-white lg:text-[84px]"
+            >
+              A resume<br />
+              <em className="text-gradient not-italic">recruiters</em>{" "}
+              <span className="italic text-[#dbe4ff]">actually</span>
+              <br />
+              <span className="text-gradient-warm italic">read.</span>
+            </motion.h1>
 
-        {/* Left */}
+            <motion.p
+              variants={fadeUp}
+              custom={2}
+              className="mt-8 text-lg leading-[1.7] text-[#a5b4d0] max-w-xl"
+            >
+              A private Azure AI copilot that scores your resume against ATS,
+              maps skill gaps against real job descriptions and rewrites the
+              lines that lose you interviews - in under thirty seconds.
+            </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: .7 }}
-          className="max-w-2xl"
-        >
+            <motion.div
+              variants={fadeUp}
+              custom={3}
+              className="mt-10 flex flex-wrap items-center gap-4"
+            >
+              <Link
+                to="/signup"
+                data-testid="hero-cta-analyze"
+                className="btn-primary"
+              >
+                Analyze my resume
+                <ArrowUpRight size={18} />
+              </Link>
+              <button data-testid="hero-cta-demo" className="btn-ghost">
+                <PlayCircle size={18} className="text-[#7ea8ff]" />
+                Watch 60-sec demo
+              </button>
+            </motion.div>
 
-          {/* <span className="rounded-full border border-blue-200 bg-blue-100 px-4 py-2 text-sm font-medium text-blue-700">
-            Powered by Microsoft Azure AI
-          </span> */}
+            {/* Metrics */}
+            <motion.div
+              variants={fadeUp}
+              custom={4}
+              className="mt-14 grid grid-cols-3 gap-8 max-w-lg"
+            >
+              {[
+                { v: "95%", l: "ATS accuracy" },
+                { v: "28s", l: "Avg. analysis" },
+                { v: "12k+", l: "Resumes scored" },
+              ].map((m) => (
+                <div key={m.l} className="relative">
+                  <div className="font-display text-4xl text-white">{m.v}</div>
+                  <div className="mt-1.5 font-mono text-[10px] tracking-[0.24em] uppercase text-[#7c8db0]">
+                    {m.l}
+                  </div>
+                  <div className="absolute -top-2 left-0 h-px w-8 bg-gradient-to-r from-[#7ea8ff] to-transparent" />
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
 
-          <h1 className="mt-8 text-6xl font-black leading-tight text-white lg:text-7xl">
-
-            Build a
-
-            <span className="bg-linear-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
-              {" "}Resume{" "}
-            </span>
-
-            Recruiters Notice
-
-          </h1>
-
-          <p className="mt-8 text-xl leading-9 text-white">
-
-            Analyze your resume using Azure AI,
-            receive ATS scoring,
-            identify missing skills,
-            compare against job descriptions,
-            and get actionable recommendations
-            in seconds.
-
-          </p>
-
-          <div className="mt-10 flex flex-wrap gap-5">
-
-            <Button>
-
-              Analyze Resume
-
-              <ArrowRight className="ml-2 inline" size={20} />
-
-            </Button>
-
-            <button className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-7 py-4 font-semibold shadow-md transition hover:shadow-xl">
-
-              <PlayCircle />
-
-              Watch Demo
-
-            </button>
-
+          {/* RIGHT */}
+          <div className="relative">
+            <DashboardPreview />
           </div>
-
-          <div className="mt-12 flex flex-wrap gap-8">
-
-            <div>
-
-              <h2 className="text-4xl font-bold text-blue-600">
-                95%
-              </h2>
-
-              <p className="text-slate-500">
-                ATS Accuracy
-              </p>
-
-            </div>
-
-            <div>
-
-              <h2 className="text-4xl font-bold text-blue-600">
-                30s
-              </h2>
-
-              <p className="text-slate-500">
-                Average Analysis
-              </p>
-
-            </div>
-
-            <div>
-
-              <h2 className="text-4xl font-bold text-blue-600">
-                Azure
-              </h2>
-
-              <p className="text-slate-500">
-                Cloud Powered
-              </p>
-
-            </div>
-
-          </div>
-
-        </motion.div>
-
-        {/* Right */}
-
-        <DashboardPreview />
-
+        </div>
       </div>
 
+      {/* Bottom fade */}
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0  bg-gradient-to-b from-transparent to-[#050914]" />
     </section>
   );
 }

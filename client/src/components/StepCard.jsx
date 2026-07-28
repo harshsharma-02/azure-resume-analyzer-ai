@@ -1,42 +1,25 @@
 import { motion } from "framer-motion";
 
-function StepCard({ icon: Icon, title, description, isLast }) {
+function StepCard({ icon: Icon, title, description, num }) {
   return (
-    <div className="relative flex flex-col items-center text-center">
-
-      {!isLast && (
-        <div className="absolute top-10 left-1/2 hidden h-1 w-full translate-x-1/2 bg-linear-to-r from-blue-500 to-cyan-400 lg:block" />
-      )}
-
+    <div className="relative text-left">
+      {/* Node */}
       <motion.div
-        whileHover={{ scale: 1.08 }}
-        className="
-          relative
-          z-10
-          flex
-          h-20
-          w-20
-          items-center
-          justify-center
-          rounded-3xl
-          bg-linear-to-r
-          from-blue-600
-          to-cyan-500
-          text-white
-          shadow-xl
-        "
+        whileHover={{ scale: 1.05 }}
+        className="relative z-10 flex h-[104px] w-[104px] items-center justify-center rounded-full glass"
       >
-        <Icon size={34} />
+        <div className="flex h-[76px] w-[76px] items-center justify-center rounded-full bg-gradient-to-br from-[#0f172a] to-[#1e293b] border border-white/10">
+          <Icon size={26} className="text-[#7ea8ff]" />
+        </div>
+        <span className="absolute -top-1 -right-1 font-mono text-[10px] tracking-[0.2em] text-[#7c8db0] bg-[#0a1120] border border-white/10 rounded-full px-2 py-1">
+          {num}
+        </span>
       </motion.div>
 
-      <h3 className="mt-6 text-2xl font-bold">
-        {title}
-      </h3>
-
-      <p className="mt-3 text-slate-600 leading-7">
+      <h3 className="mt-8 font-display text-3xl text-white">{title}</h3>
+      <p className="mt-3 text-[15px] leading-[1.7] text-[#a5b4d0] max-w-[280px]">
         {description}
       </p>
-
     </div>
   );
 }

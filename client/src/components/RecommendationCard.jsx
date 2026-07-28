@@ -2,31 +2,10 @@ import { CheckCircle2 } from "lucide-react";
 
 function RecommendationCard({ text }) {
   return (
-    <div
-      className="
-      flex
-      items-start
-      gap-4
-      rounded-xl
-      border
-      border-slate-200
-      bg-slate-50
-      p-4
-      transition
-      hover:border-blue-300
-      hover:bg-white
-      "
-    >
-      <CheckCircle2
-        className="mt-1 text-green-500"
-        size={22}
-      />
-
-      <p className="text-slate-700">
-        {text}
-      </p>
+    <div className="group flex items-start gap-3 rounded-2xl border border-white/8 bg-white/[0.03] p-4 transition hover:border-[#7ea8ff]/30 hover:bg-white/[0.05]">
+      <CheckCircle2 size={18} className="mt-0.5 text-[#67e8f9] shrink-0" />
+      <p className="text-[14px] leading-relaxed text-[#dbe4ff]">{text}</p>
     </div>
   );
 }
-
 export default RecommendationCard;
