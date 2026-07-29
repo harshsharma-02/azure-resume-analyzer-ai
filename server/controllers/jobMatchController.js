@@ -29,7 +29,7 @@ export const compareResumeJob = async (req, res) => {
 
     await resume.save();
 
-    console.log(result);
+    // console.log(result);
 
     res.status(200).json({
       message: "Resume compared successfully",

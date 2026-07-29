@@ -25,7 +25,6 @@ function UploadCard() {
       setStatus("Generating AI feedback…");
       await API.post(`/ai/${resumeId}`);
       setStatus("Resume analyzed successfully");
-      setTimeout(() => window.location.reload(), 1000);
     } catch (error) {
       setStatus(error.response?.data?.message || error.message || "Something went wrong");
     } finally {

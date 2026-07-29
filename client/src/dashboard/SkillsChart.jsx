@@ -50,7 +50,7 @@ function SkillsChart({ resume }) {
     return (
       <div className="glass p-8">
         <div className="flex items-center gap-2 eyebrow">
-          <BarChart3 size={16} className="text-[#7ea8ff]" />
+          <BarChart3 size={30} className="text-[#7ea8ff]" />
         </div>
 
         <h2 className="mt-2 font-display text-2xl text-white">

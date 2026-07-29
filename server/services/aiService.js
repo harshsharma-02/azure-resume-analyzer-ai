@@ -1,8 +1,8 @@
-import client from "../services/aiClient.js"
+import client from "../services/aiClient.js";
 
 export const analyzeResumeAI = async (resumeAnalysis, extractedText) => {
   try {
-  const prompt = `
+    const prompt = `
 You are a Senior Technical Recruiter, ATS Expert, and Software Engineering Hiring Manager.
 
 Analyze the following resume carefully.
@@ -80,7 +80,7 @@ Rules:
       ],
     });
 
-    console.log(response.choices[0].message.content);
+    // console.log(response.choices[0].message.content);
     return JSON.parse(response.choices[0].message.content);
   } catch (error) {
     console.error("AI Error:", error.response?.data || error.message);
@@ -91,7 +91,7 @@ Rules:
 export const compareResumeWithJob = async (
   resumeAnalysis,
   extractedText,
-  jobDescription
+  jobDescription,
 ) => {
   try {
     const prompt = `
@@ -136,8 +136,7 @@ Rules:
       messages: [
         {
           role: "system",
-          content:
-            "You are an ATS recruiter. Return valid JSON only.",
+          content: "You are an ATS recruiter. Return valid JSON only.",
         },
         {
           role: "user",

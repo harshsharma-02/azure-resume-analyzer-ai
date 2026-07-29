@@ -16,8 +16,8 @@ function AISuggestions({ feedback }) {
   return (
     <div className="glass p-6 space-y-5">
       <div>
-        <div className="flex items-center gap-2 eyebrow"><Sparkles size={12} className="text-[#7ea8ff]" /> AI Coach</div>
-        <h2 className="mt-2 font-display text-2xl text-white">Resume Review</h2>
+        <div className="flex items-center gap-2 eyebrow justify-center"><Sparkles size={22} className="text-[#7ea8ff]" />Resume Review</div>
+        {/* <h2 className="mt-2 font-display text-2xl text-white">Resume Review</h2> */}
       </div>
 
       {[

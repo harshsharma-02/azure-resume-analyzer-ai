@@ -21,7 +21,13 @@ export const generateAIFeedback = async (req, res) => {
 
     const aiFeedback = await analyzeResumeAI(resume.extractedText);
 
-    resume.analysis.aiFeedback = aiFeedback;
+    resume.aiFeedback = aiFeedback;
+
+    // Save an overall resume score
+    resume.analysis = {
+      ...resume.analysis,
+      overallScore: Math.round(aiFeedback.overallRating * 10),
+    };
 
     await resume.save();
 

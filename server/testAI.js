@@ -16,7 +16,6 @@ Completed Microsoft AZ-900 certification.
 
 try {
   const result = await analyzeResumeAI(resume);
-
   console.log(result);
 } catch (err) {
   console.error(err);

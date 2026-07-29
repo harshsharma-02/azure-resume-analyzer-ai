@@ -12,43 +12,47 @@ export const uploadResume = async (req, res) => {
       });
     }
 
-    // 1. Save uploaded resume
+    // Create resume document
 
     const resume = await Resume.create({
       user: req.user.id,
-
       originalName: req.file.originalname,
-
       fileName: req.file.filename,
-
       filePath: req.file.path,
-
       fileSize: req.file.size,
     });
 
-    // 2. Extract text
+    // Extract text
 
     const extractedText = await extractTextFromPDF(resume.filePath);
 
-    // 3. Structure resume
+    // Parse & normalize
 
     const structuredData = structureResume(extractedText);
-
-    // 4. Normalize data
-
     const normalizedData = normalizeResume(structuredData);
 
-    // 5. Save analysis
+    // Generate AI feedback
+
+    const aiFeedback = await analyzeResumeAI(
+      normalizedData,
+      extractedText
+    );
+
+    // Save everything
 
     resume.extractedText = extractedText;
 
-    resume.analysis = normalizedData;
+    resume.analysis = {
+      ...normalizedData,
+      overallScore: aiFeedback.hiringProbability,
+    };
+
+    resume.aiFeedback = aiFeedback;
 
     await resume.save();
 
     res.status(201).json({
       message: "Resume uploaded and analyzed successfully",
-
       resume,
     });
   } catch (error) {
@@ -68,6 +72,7 @@ export const analyzeResume = async (req, res) => {
       _id: id,
       user: req.user.id,
     });
+
     if (!resume) {
       return res.status(404).json({
         message: "Resume not found",
@@ -80,11 +85,17 @@ export const analyzeResume = async (req, res) => {
 
     const normalizedData = normalizeResume(structuredData);
 
+    const aiFeedback = await analyzeResumeAI(
+      normalizedData,
+      extractedText
+    );
+
     resume.extractedText = extractedText;
 
-    resume.analysis = normalizedData;
-
-    const aiFeedback = await analyzeResumeAI(normalizedData, extractedText);
+    resume.analysis = {
+      ...normalizedData,
+      overallScore: aiFeedback.hiringProbability,
+    };
 
     resume.aiFeedback = aiFeedback;
 
@@ -92,14 +103,17 @@ export const analyzeResume = async (req, res) => {
 
     res.status(200).json({
       message: "Resume analyzed successfully",
-      analysis: normalizedData,
+      resume,
     });
   } catch (error) {
+    console.error("Analyze Resume Error:", error);
+
     res.status(500).json({
       message: error.message,
     });
   }
 };
+
 export const getUserResumes = async (req, res) => {
   try {
     const resumes = await Resume.find({
@@ -108,8 +122,15 @@ export const getUserResumes = async (req, res) => {
       createdAt: -1,
     });
 
+
+
+// console.log(JSON.stringify(resumes, null, 2));
+
+res.status(200).json(resumes);
     res.status(200).json(resumes);
   } catch (error) {
+    console.error("Get User Resumes Error:", error);
+
     res.status(500).json({
       message: error.message,
     });

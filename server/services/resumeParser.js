@@ -5,7 +5,7 @@ export const extractTextFromPDF = async (filePath) => {
 
     try {
 
-        console.log("Reading PDF:", filePath);
+        // console.log("Reading PDF:", filePath);
 
         if (!fs.existsSync(filePath)) {
             throw new Error("PDF file not found");
@@ -21,7 +21,7 @@ export const extractTextFromPDF = async (filePath) => {
 
         await parser.destroy();
 
-        console.log("Extracted text length:", result.text.length);
+        // console.log("Extracted text length:", result.text.length);
 
         return result.text;
 

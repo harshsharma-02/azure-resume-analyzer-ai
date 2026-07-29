@@ -21,10 +21,10 @@ function Dashboard() {
   const latestResume = resumes?.[0];
   const { feedback } = useAIFeedback(latestResume?._id);
 
-  console.log("Resumes:", resumes);
-console.log("Latest Resume:", latestResume);
-console.log("Analysis:", latestResume?.analysis);
-console.log("AI Feedback:", latestResume?.aiFeedback);
+//   console.log("Resumes:", resumes);
+// console.log("Latest Resume:", latestResume);
+// console.log("Analysis:", latestResume?.analysis);
+// console.log("AI Feedback:", latestResume?.aiFeedback);
 
   return (
     <DashboardLayout>

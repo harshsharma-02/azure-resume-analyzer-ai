@@ -78,7 +78,7 @@ function Navbar() {
           >
             Sign in
           </Link>
-          <Link to="/signup" data-testid="nav-signup-btn" className="btn-primary text-[13px]">
+          <Link to="/register" data-testid="nav-signup-btn" className="btn-primary text-[13px]">
             Get started
             <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M13 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
