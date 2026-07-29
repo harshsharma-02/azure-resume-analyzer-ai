@@ -19,7 +19,10 @@ export const generateAIFeedback = async (req, res) => {
       });
     }
 
-    const aiFeedback = await analyzeResumeAI(resume.extractedText);
+    const aiFeedback = await analyzeResumeAI(
+      resume.analysis,
+      resume.extractedText,
+    );
 
     resume.aiFeedback = aiFeedback;
 
@@ -28,12 +31,11 @@ export const generateAIFeedback = async (req, res) => {
       ...resume.analysis,
       overallScore: Math.round(aiFeedback.overallRating * 10),
     };
-
+    
     await resume.save();
 
     res.status(200).json({
       message: "AI feedback generated successfully",
-
       aiFeedback,
     });
   } catch (error) {
