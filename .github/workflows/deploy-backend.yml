@@ -27,6 +27,14 @@ jobs:
       - name: Install dependencies
         working-directory: server
         run: npm ci
+        
+      - name: Debug OIDC Token
+        run: |
+          echo "Repository: ${{ github.repository }}"
+          echo "Repository ID: ${{ github.repository_id }}"
+          echo "Repository Owner: ${{ github.repository_owner }}"
+          echo "Repository Owner ID: ${{ github.repository_owner_id }}"
+          echo "Workflow Ref: ${{ github.ref }}"
 
       - name: Login to Azure
         uses: azure/login@v2
