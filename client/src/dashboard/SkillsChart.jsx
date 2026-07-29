@@ -1,62 +1,185 @@
-import { Sparkles } from "lucide-react";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Cell,
+} from "recharts";
 
-function AISuggestions({ feedback }) {
-  if (!feedback) {
+import { BarChart3, BarChart3Icon } from "lucide-react";
+
+function CustomTooltip({ active, payload }) {
+  if (!active || !payload || !payload.length) return null;
+
+  const skill = payload[0].payload;
+
+  return (
+    <div
+      className="
+      rounded-2xl
+      border
+      border-white/10
+      bg-[#101827]/80
+      backdrop-blur-2xl
+      px-5
+      py-4
+      shadow-2xl
+      "
+    >
+      <p className="text-sm text-[#7ea8ff] font-semibold">
+        {skill.name}
+      </p>
+
+      <h3 className="mt-1 text-3xl font-black text-white">
+        {skill.score}
+        <span className="text-lg text-[#94a3b8]">%</span>
+      </h3>
+
+     
+    </div>
+  );
+}
+
+function SkillsChart({ resume }) {
+  const data = resume?.aiFeedback?.skillRatings || [];
+
+  if (!data.length) {
     return (
-      <div className="glass p-6">
+      <div className="glass p-8">
         <div className="flex items-center gap-2 eyebrow">
-          <Sparkles size={12} className="text-[#7ea8ff]" /> AI Coach
+          <BarChart3 size={16} className="text-[#7ea8ff]" />
         </div>
-        <h2 className="mt-2 font-display text-2xl text-white">Suggestions</h2>
-        <p className="mt-3 text-sm text-[#a5b4d0]">Generate AI feedback to see personalized suggestions here.</p>
+
+        <h2 className="mt-2 font-display text-2xl text-white">
+          AI Skill Ratings
+        </h2>
+
+        <div className="mt-12 text-center text-[#94a3b8]">
+          Upload and analyze a resume to generate skill ratings.
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="glass p-6 space-y-5">
-      <div>
-        <div className="flex items-center gap-2 eyebrow"><Sparkles size={12} className="text-[#7ea8ff]" /> AI Coach</div>
-        <h2 className="mt-2 font-display text-2xl text-white">Resume Review</h2>
+    <div className="glass p-8">
+      <div className="text-center">
+        <div>
+          <div className="flex items-center gap-2 eyebrow justify-center">
+            <BarChart3Icon
+              size={16}
+              className="text-[#7ea8ff] "
+            />
+            Skill Analysis
+          </div>
+
+          <h2 className="mt-2 font-display text-2xl text-white">
+            AI Skill Ratings
+          </h2>
+
+          <p className="mt-2 text-[#94a3b8] text-sm">
+            Generated using your projects, experience and AI evaluation.
+          </p>
+        </div>
       </div>
 
-      {[
-        { title: "Strengths", color: "#34d399", items: feedback.strengths?.slice(0, 3) },
-        { title: "Weaknesses", color: "#f87171", items: feedback.weaknesses?.slice(0, 3) },
-        { title: "Improvements", color: "#7ea8ff", items: feedback.improvements?.slice(0, 3) },
-      ].map((sec) => (
-        <div key={sec.title}>
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase" style={{ color: sec.color }}>{sec.title}</div>
-          <ul className="mt-2 space-y-1.5">
-            {sec.items?.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-[#dbe4ff]">
-                <span className="mt-1.5 h-1 w-1 rounded-full shrink-0" style={{ background: sec.color }} />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <div className="mt-8 h-[360px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            margin={{
+              top: 10,
+              right: 10,
+              left: -20,
+              bottom: 25,
+            }}
+          >
+            <defs>
+              <linearGradient
+                id="barGradient"
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="0%"
+                  stopColor="#6EA8FE"
+                  stopOpacity={0.95}
+                />
 
-      {feedback.recruiterSummary && (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#f6c26b]">Recruiter Summary</div>
-          <p className="mt-2 text-sm text-[#dbe4ff] leading-relaxed">{feedback.recruiterSummary}</p>
-        </div>
-      )}
+                <stop
+                  offset="45%"
+                  stopColor="#6EA8FE"
+                  stopOpacity={0.45}
+                />
 
-      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/8">
-        <div>
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#7c8db0]">Rating</div>
-          <div className="mt-1 font-display text-3xl text-gradient">{feedback.overallRating}<span className="text-[#7c8db0] text-lg">/10</span></div>
-        </div>
-        <div>
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#7c8db0]">Hiring Prob.</div>
-          <div className="mt-1 font-display text-3xl text-gradient">{feedback.hiringProbability}<span className="text-[#7c8db0] text-lg">%</span></div>
-        </div>
+                <stop
+                  offset="100%"
+                  stopColor="#6EA8FE"
+                  stopOpacity={0.15}
+                />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid
+              vertical={false}
+              stroke="rgba(255,255,255,0.05)"
+              strokeDasharray="4 6"
+            />
+
+            <XAxis
+              dataKey="name"
+              interval={0}
+              angle={-25}
+              textAnchor="end"
+              tick={{
+                fill: "#94a3b8",
+                fontSize: 11,
+              }}
+              tickLine={false}
+              axisLine={false}
+            />
+
+            <YAxis
+              domain={[0, 100]}
+              tick={{
+                fill: "#94a3b8",
+                fontSize: 12,
+              }}
+              tickLine={false}
+              axisLine={false}
+            />
+
+            <Tooltip
+              cursor={{
+                fill: "rgba(126,168,255,0.05)",
+              }}
+              content={<CustomTooltip />}
+            />
+
+            <Bar
+              dataKey="score"
+              radius={[14, 14, 0, 0]}
+              fill="url(#barGradient)"
+              animationDuration={1500}
+            >
+              {data.map((_, index) => (
+                <Cell
+                  key={index}
+                  stroke="rgba(255,255,255,0.18)"
+                  strokeWidth={1.2}
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
 }
 
-export default AISuggestions;
+export default SkillsChart;

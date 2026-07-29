@@ -17,8 +17,8 @@ function TopBar() {
       className="sticky top-0 z-10 flex items-center justify-between border-b border-white/8 bg-[#050914]/60 backdrop-blur-2xl px-8 py-4"
     >
       <div>
-        <div className="eyebrow">— Dashboard</div>
-        <h2 className="font-display text-3xl text-white mt-0.5">Overview</h2>
+        <div className="eyebrow">Dashboard</div>
+        {/* <h2 className="font-display text-3xl text-white mt-0.5"></h2> */}
       </div>
 
       <div className="flex items-center gap-3">

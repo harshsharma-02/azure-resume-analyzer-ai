@@ -8,8 +8,8 @@ const activities = [
 function ActivityTimeline() {
   return (
     <div className="glass p-6">
-      <div className="eyebrow">— Timeline</div>
-      <h2 className="mt-2 font-display text-2xl text-white">Recent Activity</h2>
+      <div className="eyebrow">- Timeline -</div>
+      <h2 className="mt-2 font-display text-2xl text-white text-center">Recent Activity</h2>
 
       <div className="mt-6 space-y-5 relative">
         <div className="absolute left-[5px] top-1 bottom-1 w-px bg-gradient-to-b from-[#4a7dff]/40 via-white/10 to-transparent" />

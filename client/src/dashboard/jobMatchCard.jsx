@@ -41,10 +41,10 @@ function JobMatchCard({ resume }) {
 
   return (
     <div className="glass p-8">
-      <div className="flex items-center gap-3">
-        <Briefcase className="text-[#7ea8ff]" size={22} />
+      <div className="flex items-center gap-3 justify-center ">
+        <Briefcase className="text-[#7ea8ff]" size={30} />
         <div>
-          <div className="eyebrow">— Compare</div>
+          <div className="eyebrow text-6xl">- Compare -</div>
           <h2 className="mt-1 font-display text-3xl text-white">Resume vs Job Description</h2>
         </div>
       </div>

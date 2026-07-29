@@ -58,11 +58,11 @@ function InterviewGenerator({ resume }) {
 
   return (
     <div className="glass p-8">
-      <div className="flex items-center gap-3">
-        <Brain className="text-[#7ea8ff]" size={22} />
+      <div className="flex items-center gap-2 justify-center">
+        <Brain className="text-[#7ea8ff]" size={30} />
         <div>
-          <div className="eyebrow">— Coach</div>
-          <h1 className="mt-1 font-display text-3xl text-white">Interview Question Generator</h1>
+          <div className="eyebrow">- Preperation Corner -</div>
+          <h2 className=" font-display  text-white text-center">Interview Question Generator</h2>
         </div>
       </div>
 

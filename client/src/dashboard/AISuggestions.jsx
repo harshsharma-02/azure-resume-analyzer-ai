@@ -3,9 +3,9 @@ import { Sparkles } from "lucide-react";
 function AISuggestions({ feedback }) {
   if (!feedback) {
     return (
-      <div className="glass p-6">
-        <div className="flex items-center gap-2 eyebrow">
-          <Sparkles size={12} className="text-[#7ea8ff]" /> AI Coach
+      <div className="glass p-6 text-center">
+        <div className="flex items-center gap-2 eyebrow justify-center">
+          <Sparkles size={18} className="text-[#7ea8ff]" /> AI Coach
         </div>
         <h2 className="mt-2 font-display text-2xl text-white">Suggestions</h2>
         <p className="mt-3 text-sm text-[#a5b4d0]">Generate AI feedback to see personalized suggestions here.</p>
