@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 
 function Dashboard() {
   const user = useAuth();
-  const resumes = useResumes();
+ const { resumes, refreshResumes } = useResumes();
   const reports = useReports();
   const latestResume = resumes?.[0];
   const { feedback } = useAIFeedback(latestResume?._id);
@@ -56,7 +56,7 @@ function Dashboard() {
 
         {/* RIGHT — 1 column */}
         <div className="space-y-6">
-          <UploadCard />
+          <UploadCard refreshResumes={refreshResumes} />
           <QuickActions resume={latestResume} />
           <AISuggestions feedback={feedback} />
           <ActivityTimeline />

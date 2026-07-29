@@ -4,23 +4,23 @@ import API from "../api/axios";
 function useResumes() {
   const [resumes, setResumes] = useState([]);
 
+  const refreshResumes = async () => {
+    try {
+      const res = await API.get("/resume");
+      setResumes(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchResumes = async () => {
-      try {
-        const res = await API.get("/resume");
-
-        setResumes(res.data);
-
-        console.log("RESUMES FROM API:", res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchResumes();
+    refreshResumes();
   }, []);
 
-  return resumes;
+  return {
+    resumes,
+    refreshResumes,
+  };
 }
 
 export default useResumes;

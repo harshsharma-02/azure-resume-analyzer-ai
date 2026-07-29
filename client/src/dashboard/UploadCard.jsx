@@ -4,7 +4,7 @@ import { UploadCloud, FileCheck2 } from "lucide-react";
 import { motion } from "framer-motion";
 import API from "../api/axios";
 
-function UploadCard() {
+function UploadCard({ refreshResumes }){
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState("");
   const [fileName, setFileName] = useState("");
@@ -24,6 +24,7 @@ function UploadCard() {
       await API.post(`/resume/analyze/${resumeId}`);
       setStatus("Generating AI feedback…");
       await API.post(`/ai/${resumeId}`);
+      await refreshResumes();
       setStatus("Resume analyzed successfully");
     } catch (error) {
       setStatus(error.response?.data?.message || error.message || "Something went wrong");
