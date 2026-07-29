@@ -113,23 +113,28 @@ export const analyzeResume = async (req, res) => {
     });
   }
 };
-
 export const getUserResumes = async (req, res) => {
   try {
+
+    console.log("USER FROM TOKEN:", req.user);
+
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Unauthorized user",
+      });
+    }
+
     const resumes = await Resume.find({
       user: req.user.id,
     }).sort({
       createdAt: -1,
     });
 
-
-
-// console.log(JSON.stringify(resumes, null, 2));
-
-res.status(200).json(resumes);
     res.status(200).json(resumes);
+
   } catch (error) {
-    console.error("Get User Resumes Error:", error);
+
+    console.error("GET RESUMES ERROR:", error);
 
     res.status(500).json({
       message: error.message,
