@@ -40,3 +40,9 @@ jobs:
         with:
           app-name: hiresenseai-api-harsh02
           package: ./server
+
+          - name: Debug GitHub Context
+  run: |
+    echo "Repository: ${{ github.repository }}"
+    echo "Repository Owner: ${{ github.repository_owner }}"
+    echo "Ref: ${{ github.ref }}"
