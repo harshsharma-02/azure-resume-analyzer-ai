@@ -14,6 +14,7 @@ import JobMatchCard from "../dashboard/jobMatchCard";
 import InterviewGenerator from "../dashboard/interviewGenerator";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Footer from "../components/Footer"
 
 function Dashboard() {
   const user = useAuth();
@@ -94,6 +95,7 @@ function Dashboard() {
           <ActivityTimeline />
         </div>
       </div>
+      <Footer/>
     </DashboardLayout>
   );
 }
