@@ -13,28 +13,43 @@ import useAIFeedback from "../hooks/useAIFeedback";
 import JobMatchCard from "../dashboard/jobMatchCard";
 import InterviewGenerator from "../dashboard/interviewGenerator";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
   const user = useAuth();
   const { resumes, refreshResumes } = useResumes();
   const reports = useReports();
-  const latestResume = resumes?.[0];
-  const { feedback } = useAIFeedback(latestResume?._id);
+
+  const [selectedResume, setSelectedResume] = useState(null);
+
+  useEffect(() => {
+    if (!resumes?.length) return;
+
+    const exists = resumes.some((r) => r._id === selectedResume?._id);
+
+    if (!exists) {
+      setSelectedResume(resumes[0]);
+    }
+  }, [resumes, selectedResume]);
+
+  const { feedback } = useAIFeedback(selectedResume?._id);
 
   //   console.log("Resumes:", resumes);
-  // console.log("Latest Resume:", latestResume);
-  // console.log("Analysis:", latestResume?.analysis);
-  // console.log("AI Feedback:", latestResume?.aiFeedback);
+  // console.log("Latest Resume:", selectedResume);
+  // console.log("Analysis:", selectedResume?.analysis);
+  // console.log("AI Feedback:", selectedResume?.aiFeedback);
 
   return (
     <DashboardLayout>
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="mb-10"
       >
-        <div id="dashboard" className="chip">Welcome back</div>
+        <div id="dashboard" className="chip">
+          Welcome back
+        </div>
         <h1 className="mt-3 font-display text-6xl text-white leading-[0.95]">
           Hi {user?.name?.split(" ")[0] || "there"},<br />
           <em className="text-gradient not-italic italic">
@@ -52,13 +67,18 @@ function Dashboard() {
         {/* LEFT — 2 columns */}
         <div className="xl:col-span-2 space-y-6">
           <StatsSection resumes={resumes} reports={reports} />
-          <SkillsChart resume={resumes?.[0]} />
+          <SkillsChart resume={selectedResume} />
           <div id="match" className="scroll-mt-24">
-            <JobMatchCard resume={latestResume} />
+            <JobMatchCard resume={selectedResume} />
           </div>
-          <InterviewGenerator resume={latestResume} />
+          <InterviewGenerator resume={selectedResume} />
           <div id="reports" className="scroll-mt-24">
-            <RecentReports resumes={resumes} reports={reports} />
+            <RecentReports
+              resumes={resumes}
+              reports={reports}
+              selectedResume={selectedResume}
+              setSelectedResume={setSelectedResume}
+            />
           </div>
         </div>
 
@@ -66,7 +86,7 @@ function Dashboard() {
         <div className="space-y-6">
           <UploadCard refreshResumes={refreshResumes} />
 
-          <QuickActions resume={latestResume} />
+          <QuickActions resume={selectedResume} />
           <div id="review" className="scroll-mt-24">
             <AISuggestions feedback={feedback} />
           </div>

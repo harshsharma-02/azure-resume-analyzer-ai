@@ -3,7 +3,7 @@ import { extractTextFromPDF } from "../services/resumeParser.js";
 import { structureResume } from "../services/resumeStructurer.js";
 import { normalizeResume } from "../services/resumeNormalizer.js";
 import { analyzeResumeAI } from "../services/aiService.js";
-
+import fs from "fs";
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -135,6 +135,54 @@ export const getUserResumes = async (req, res) => {
   } catch (error) {
 
     console.error("GET RESUMES ERROR:", error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+export const deleteResume = async (req, res) => {
+  try {
+    console.log("DELETE ID:", req.params.id);
+
+    const resume = await Resume.findById(req.params.id);
+
+    console.log("FOUND RESUME:", resume);
+
+    if (!resume) {
+      return res.status(404).json({
+        message: "Resume not found",
+      });
+    }
+
+    console.log("RESUME USER:", resume.user.toString());
+    console.log("REQUEST USER:", req.user.id);
+
+    if (resume.user.toString() !== req.user.id) {
+      return res.status(403).json({
+        message: "Unauthorized",
+      });
+    }
+
+    console.log("FILE PATH:", resume.filePath);
+
+    if (fs.existsSync(resume.filePath)) {
+      console.log("Deleting file...");
+      fs.unlinkSync(resume.filePath);
+    } else {
+      console.log("File does not exist");
+    }
+
+    await resume.deleteOne();
+
+    res.json({
+      success: true,
+      message: "Resume deleted successfully",
+    });
+  } catch (error) {
+    console.error("DELETE ERROR:", error);
 
     res.status(500).json({
       message: error.message,
