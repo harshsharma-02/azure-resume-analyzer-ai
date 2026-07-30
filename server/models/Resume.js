@@ -18,11 +18,6 @@ const resumeSchema = new mongoose.Schema(
       required: true,
     },
 
-    filePath: {
-      type: String,
-      required: true,
-    },
-
     fileSize: {
       type: Number,
       required: true,
@@ -55,6 +50,13 @@ const resumeSchema = new mongoose.Schema(
     interviewQuestions: {
       type: Object,
       default: {},
+    },
+    blobName: {
+      type: String,
+    },
+
+    blobUrl: {
+      type: String,
     },
   },
   {

@@ -19,7 +19,7 @@ function QuickActions({ resume }) {
 
   return (
     <div className="glass p-6  hover-lift">
-      <div className="eyebrow"> Shortcuts</div>
+      <div className="eyebrow">Shortcuts</div>
       <h2 className="mt-2 font-display text-2xl text-white text-center">Quick Actions</h2>
 
       <div className="mt-5 grid grid-cols-2 gap-3">
