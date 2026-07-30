@@ -9,7 +9,7 @@ import {
   uploadToAzure,
   downloadFromAzure,
   deleteFromAzure,
-} from "../services/blobStrorage.js";
+} from "../services/blobStorage.js";
 
 export const uploadResume = async (req, res) => {
   try {
