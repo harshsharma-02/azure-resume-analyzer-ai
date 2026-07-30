@@ -57,7 +57,7 @@ function InterviewGenerator({ resume }) {
   );
 
   return (
-    <div className="glass p-8">
+    <div className="glass p-8 hover-lift">
       <div className="flex items-center gap-2 justify-center">
         <Brain className="text-[#7ea8ff]" size={30} />
         <div>

@@ -4,6 +4,7 @@ import { structureResume } from "../services/resumeStructurer.js";
 import { normalizeResume } from "../services/resumeNormalizer.js";
 import { analyzeResumeAI } from "../services/aiService.js";
 import fs from "fs";
+import path from "path";
 export const uploadResume = async (req, res) => {
   try {
     if (!req.file) {
@@ -145,6 +146,7 @@ export const getUserResumes = async (req, res) => {
 
 export const deleteResume = async (req, res) => {
   try {
+    console.log("========== DELETE REQUEST ==========");
     console.log("DELETE ID:", req.params.id);
 
     const resume = await Resume.findById(req.params.id);
@@ -166,25 +168,42 @@ export const deleteResume = async (req, res) => {
       });
     }
 
-    console.log("FILE PATH:", resume.filePath);
+    const absolutePath = path.resolve(resume.filePath);
 
-    if (fs.existsSync(resume.filePath)) {
-      console.log("Deleting file...");
-      fs.unlinkSync(resume.filePath);
-    } else {
-      console.log("File does not exist");
+    console.log("RELATIVE PATH:", resume.filePath);
+    console.log("ABSOLUTE PATH:", absolutePath);
+
+    try {
+      if (fs.existsSync(absolutePath)) {
+        console.log("Deleting physical file...");
+        fs.unlinkSync(absolutePath);
+        console.log("Physical file deleted.");
+      } else {
+        console.log("File does not exist.");
+      }
+    } catch (fileError) {
+      console.error("FILE DELETE ERROR:", fileError);
     }
 
-    await resume.deleteOne();
+    console.log("Deleting MongoDB document...");
 
-    res.json({
+    await Resume.findByIdAndDelete(req.params.id);
+
+    console.log("MongoDB document deleted.");
+
+    res.status(200).json({
       success: true,
       message: "Resume deleted successfully",
     });
-  } catch (error) {
-    console.error("DELETE ERROR:", error);
 
-    res.status(500).json({
+    console.log("Response sent successfully.");
+    console.log("========== DELETE COMPLETE ==========");
+  } catch (error) {
+    console.error("========== DELETE ERROR ==========");
+    console.error(error);
+    console.error(error.stack);
+
+    return res.status(500).json({
       message: error.message,
     });
   }

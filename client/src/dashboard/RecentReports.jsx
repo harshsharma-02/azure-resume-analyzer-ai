@@ -11,32 +11,32 @@ function RecentReports({
   const items = resumes?.length ? resumes : reports;
 
   const handleDelete = async (resume) => {
-    const confirmed = window.confirm(
-      `Delete "${resume.originalName}"?`
+  const confirmed = window.confirm(
+    `Delete "${resume.originalName}"?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const remaining = resumes.filter(
+      (r) => r._id !== resume._id
     );
 
-    if (!confirmed) return;
-
-    try {
-      await deleteResume(resume._id);
-
-      const remaining = resumes.filter(
-        (r) => r._id !== resume._id
-      );
-
-      if (selectedResume?._id === resume._id) {
-        setSelectedResume(remaining[0] || null);
-      }
-
-      await refreshResumes();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete resume.");
+    if (selectedResume?._id === resume._id) {
+      setSelectedResume(remaining[0] || null);
     }
-  };
+
+    await deleteResume(resume._id);
+
+    await refreshResumes();
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete resume.");
+  }
+};
 
   return (
-    <section id="reports" className="glass p-8">
+    <section id="reports" className="glass p-8 hover-lift">
       <div className="flex items-center justify-between mb-6">
         <div>
           <div className="eyebrow">- History -</div>

@@ -178,6 +178,7 @@ function Sidebar({ collapsed, setCollapsed }) {
                 w-full
                 group
                 flex items-center
+                 hover-lift
                 ${collapsed ? "justify-center px-0 py-3" : "gap-5 px-3 py-3"}
                 rounded-xl
                 transition-all

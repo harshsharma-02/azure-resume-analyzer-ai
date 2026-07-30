@@ -48,7 +48,7 @@ function SkillsChart({ resume }) {
 
   if (!data.length) {
     return (
-      <div className="glass p-8">
+      <div className="glass p-8 hover-lift">
         <div className="flex items-center gap-2 eyebrow">
           <BarChart3 size={30} className="text-[#7ea8ff]" />
         </div>

@@ -44,10 +44,10 @@ function UploadCard({ refreshResumes }){
       {...getRootProps()}
       whileHover={{ y: -3 }}
       data-testid="upload-card"
-      className={`glass hover-lift cursor-pointer p-8 text-center border-dashed transition ${
+      className={`glass hover-lift cursor-pointer p-8 text-center  transition ${
         isDragActive ? "!border-[#7ea8ff] bg-[#7ea8ff]/5" : ""
       }`}
-      style={{ borderStyle: "dashed" }}
+      
     >
       <input {...getInputProps()} />
 
