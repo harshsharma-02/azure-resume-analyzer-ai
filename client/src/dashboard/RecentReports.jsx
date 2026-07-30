@@ -5,15 +5,15 @@ function RecentReports({ resumes = [], reports = [] }) {
   // console.log(items);
 
   return (
-    <section className="glass p-8">
+    <section id="reports" className="glass p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <div className="eyebrow ml-42">- History -</div>
+          <div className="eyebrow ">- History -</div>
           <h2 className="mt-2 font-display text-3xl text-white">
             Recent Reports
           </h2>
         </div>
-        <span className="chip mt-4">{items?.length || 0} entries</span>
+        <span className="chip">{items?.length || 0} entries</span>
       </div>
 
       <div className="space-y-3">

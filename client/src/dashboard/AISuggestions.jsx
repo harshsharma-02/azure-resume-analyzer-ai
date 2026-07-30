@@ -26,7 +26,7 @@ function AISuggestions({ feedback }) {
         { title: "Improvements", color: "#7ea8ff", items: feedback.improvements?.slice(0, 3) },
       ].map((sec) => (
         <div key={sec.title}>
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase" style={{ color: sec.color }}>{sec.title}</div>
+          <div className="font-mono text-[15px] tracking-[0.24em] uppercase text-center" style={{ color: sec.color }}>{sec.title}</div>
           <ul className="mt-2 space-y-1.5">
             {sec.items?.map((item, i) => (
               <li key={i} className="flex items-start gap-2 text-sm text-[#dbe4ff]">
@@ -40,19 +40,19 @@ function AISuggestions({ feedback }) {
 
       {feedback.recruiterSummary && (
         <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#f6c26b]">Recruiter Summary</div>
+          <div className="text-center font-mono text-[15px] tracking-[0.24em] uppercase text-[#f6c26b]">Recruiter Summary</div>
           <p className="mt-2 text-sm text-[#dbe4ff] leading-relaxed">{feedback.recruiterSummary}</p>
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-4 pt-2 border-t border-white/8">
         <div>
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#7c8db0]">Rating</div>
-          <div className="mt-1 font-display text-3xl text-gradient">{feedback.overallRating}<span className="text-[#7c8db0] text-lg">/10</span></div>
+          <div className="font-mono text-[12px] tracking-[0.24em] uppercase text-[#7c8db0]">Rating</div>
+          <div className="ml-2 mt-1 font-display text-3xl text-gradient">{feedback.overallRating}<span className="text-[#7c8db0] text-lg">/10</span></div>
         </div>
         <div>
-          <div className="font-mono text-[10px] tracking-[0.24em] uppercase text-[#7c8db0]">Hiring Prob.</div>
-          <div className="mt-1 font-display text-3xl text-gradient">{feedback.hiringProbability}<span className="text-[#7c8db0] text-lg">%</span></div>
+          <div className="font-mono text-[12px] tracking-[0.24em] uppercase text-[#7c8db0]">Hiring Prob.</div>
+          <div className="ml-5 mt-1 font-display text-3xl text-gradient">{feedback.hiringProbability}<span className="text-[#7c8db0] text-lg">%</span></div>
         </div>
       </div>
     </div>

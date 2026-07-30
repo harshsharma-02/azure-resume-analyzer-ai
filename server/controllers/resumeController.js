@@ -116,7 +116,7 @@ export const analyzeResume = async (req, res) => {
 export const getUserResumes = async (req, res) => {
   try {
 
-    console.log("USER FROM TOKEN:", req.user);
+    // console.log("USER FROM TOKEN:", req.user);
 
     if (!req.user) {
       return res.status(401).json({

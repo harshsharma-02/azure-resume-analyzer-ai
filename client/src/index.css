@@ -111,3 +111,6 @@ code {
 .page-container {
   @apply mx-auto w-full px-8 xl:px-12 2xl:px-16;
 }
+html {
+  scroll-behavior: smooth;
+}

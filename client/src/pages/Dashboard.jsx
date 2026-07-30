@@ -16,31 +16,35 @@ import { motion } from "framer-motion";
 
 function Dashboard() {
   const user = useAuth();
- const { resumes, refreshResumes } = useResumes();
+  const { resumes, refreshResumes } = useResumes();
   const reports = useReports();
   const latestResume = resumes?.[0];
   const { feedback } = useAIFeedback(latestResume?._id);
 
-//   console.log("Resumes:", resumes);
-// console.log("Latest Resume:", latestResume);
-// console.log("Analysis:", latestResume?.analysis);
-// console.log("AI Feedback:", latestResume?.aiFeedback);
+  //   console.log("Resumes:", resumes);
+  // console.log("Latest Resume:", latestResume);
+  // console.log("Analysis:", latestResume?.analysis);
+  // console.log("AI Feedback:", latestResume?.aiFeedback);
 
   return (
     <DashboardLayout>
-      <motion.div
+      <motion.div 
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="mb-10"
       >
-        <div className="chip">Welcome back</div>
+        <div id="dashboard" className="chip">Welcome back</div>
         <h1 className="mt-3 font-display text-6xl text-white leading-[0.95]">
           Hi {user?.name?.split(" ")[0] || "there"},<br />
-          <em className="text-gradient not-italic italic">let's ship your best resume.</em>
+          <em className="text-gradient not-italic italic">
+            let's ship your best resume.
+          </em>
         </h1>
         <p className="mt-4 text-[#a5b4d0] max-w-xl">
-          Your Azure AI copilot has parsed {resumes?.length || 0} resume{resumes?.length === 1 ? "" : "s"} so far. Continue where you left off, or drop a new one below.
+          Your Azure AI copilot has parsed {resumes?.length || 0} resume
+          {resumes?.length === 1 ? "" : "s"} so far. Continue where you left
+          off, or drop a new one below.
         </p>
       </motion.div>
 
@@ -49,16 +53,23 @@ function Dashboard() {
         <div className="xl:col-span-2 space-y-6">
           <StatsSection resumes={resumes} reports={reports} />
           <SkillsChart resume={resumes?.[0]} />
-          <JobMatchCard resume={latestResume} />
+          <div id="match" className="scroll-mt-24">
+            <JobMatchCard resume={latestResume} />
+          </div>
           <InterviewGenerator resume={latestResume} />
-          <RecentReports resumes={resumes} reports={reports} />
+          <div id="reports" className="scroll-mt-24">
+            <RecentReports resumes={resumes} reports={reports} />
+          </div>
         </div>
 
         {/* RIGHT — 1 column */}
         <div className="space-y-6">
           <UploadCard refreshResumes={refreshResumes} />
+
           <QuickActions resume={latestResume} />
-          <AISuggestions feedback={feedback} />
+          <div id="review" className="scroll-mt-24">
+            <AISuggestions feedback={feedback} />
+          </div>
           <ActivityTimeline />
         </div>
       </div>
