@@ -11,29 +11,30 @@ function RecentReports({
   const items = resumes?.length ? resumes : reports;
 
   const handleDelete = async (resume) => {
-  const confirmed = window.confirm(
-    `Delete "${resume.originalName}"?`
-  );
+    const confirmed = window.confirm(`Delete "${resume.originalName}"?`);
 
-  if (!confirmed) return;
+    if (!confirmed) return;
 
-  try {
-    const remaining = resumes.filter(
-      (r) => r._id !== resume._id
-    );
+    try {
+      const remaining = resumes.filter((r) => r._id !== resume._id);
 
-    if (selectedResume?._id === resume._id) {
-      setSelectedResume(remaining[0] || null);
+      if (selectedResume?._id === resume._id) {
+        setSelectedResume(remaining[0] || null);
+      }
+
+      await deleteResume(resume._id);
+
+      await refreshResumes();
+    } catch (err) {
+      console.error(err);
+
+      alert(
+        err.response?.data?.message ||
+          err.message ||
+          "Failed to delete resume.",
+      );
     }
-
-    await deleteResume(resume._id);
-
-    await refreshResumes();
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete resume.");
-  }
-};
+  };
 
   return (
     <section id="reports" className="glass p-8 hover-lift">
@@ -46,9 +47,7 @@ function RecentReports({
           </h2>
         </div>
 
-        <span className="chip">
-          {items?.length || 0} entries
-        </span>
+        <span className="chip">{items?.length || 0} entries</span>
       </div>
 
       <div className="space-y-3">
@@ -60,8 +59,7 @@ function RecentReports({
           </div>
         ) : (
           items.map((resume) => {
-            const isActive =
-              selectedResume?._id === resume._id;
+            const isActive = selectedResume?._id === resume._id;
 
             return (
               <div
@@ -88,9 +86,7 @@ function RecentReports({
                   }
                   date={
                     resume.createdAt
-                      ? new Date(
-                          resume.createdAt
-                        ).toLocaleDateString()
+                      ? new Date(resume.createdAt).toLocaleDateString()
                       : "—"
                   }
                   active={isActive}

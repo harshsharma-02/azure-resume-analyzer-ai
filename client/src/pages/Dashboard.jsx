@@ -78,6 +78,7 @@ function Dashboard() {
               reports={reports}
               selectedResume={selectedResume}
               setSelectedResume={setSelectedResume}
+              refreshResumes={refreshResumes}
             />
           </div>
         </div>

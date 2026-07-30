@@ -12,7 +12,7 @@ function UploadCard({ refreshResumes }){
   const handleUpload = async (file) => {
     try {
       setUploading(true);
-      setStatus("Uploading resume…");
+      setStatus("Uploading resume");
       setFileName(file.name);
       const formData = new FormData();
       formData.append("resume", file);
@@ -20,7 +20,7 @@ function UploadCard({ refreshResumes }){
         headers: { "Content-Type": "multipart/form-data" },
       });
       const resumeId = uploadResponse.data.resume._id;
-      setStatus("Analyzing resume…");
+      setStatus("Analyzing resume");
       await API.post(`/resume/analyze/${resumeId}`);
       setStatus("Generating AI feedback…");
       await API.post(`/ai/${resumeId}`);

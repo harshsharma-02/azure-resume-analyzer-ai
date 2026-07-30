@@ -1,18 +1,7 @@
-import {
-  FileText,
-  ArrowUpRight,
-  CheckCircle2,
-  Trash2,
-} from "lucide-react";
+import { FileText, ArrowUpRight, CheckCircle2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 
-function ReportCard({
-  file,
-  score,
-  date,
-  active = false,
-  onDelete,
-}) {
+function ReportCard({ file, score, date, active = false, onDelete }) {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
@@ -59,13 +48,9 @@ function ReportCard({
         </div>
 
         <div className="min-w-0">
-          <h3 className="truncate font-medium text-white">
-            {file}
-          </h3>
+          <h3 className="truncate font-medium text-white">{file}</h3>
 
-          <p className="mt-1 font-mono text-xs text-[#7c8db0]">
-            {date}
-          </p>
+          <p className="mt-1 font-mono text-xs text-[#7c8db0]">{date}</p>
         </div>
       </div>
 
@@ -75,13 +60,14 @@ function ReportCard({
             ATS
           </div>
 
-          <div className="font-display text-2xl text-gradient">
-            {score}
-          </div>
+          <div className="font-display text-2xl text-gradient">{score}</div>
         </div>
 
         <button
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
           className={`
             flex h-9 w-9 items-center justify-center rounded-xl border transition
             ${
