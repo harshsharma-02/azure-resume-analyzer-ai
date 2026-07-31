@@ -41,6 +41,7 @@ function Dashboard() {
   // console.log("AI Feedback:", selectedResume?.aiFeedback);
 
   return (
+    <>
     <DashboardLayout>
       <motion.div
         initial={{ opacity: 0, y: 12 }}
@@ -95,8 +96,12 @@ function Dashboard() {
           <ActivityTimeline />
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </DashboardLayout>
+    
+    
+      
+      </>
   );
 }
 

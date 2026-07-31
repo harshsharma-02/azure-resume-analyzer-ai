@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Brain, BadgeCheck, Target, BarChart3, Zap, ShieldCheck } from "lucide-react";
+import { Brain, BadgeCheck, Target, BarChart3, Zap, ShieldCheck,ChevronRight } from "lucide-react";
 import FeatureCard from "./FeatureCard";
 
 const features = [
@@ -21,8 +21,8 @@ function Features() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
         >
-          <span className="eyebrow">— Capabilities</span>
-          <h2 className="mt-5 font-display text-6xl lg:text-7xl text-white leading-[0.95]">
+          <span className="eyebrow">Capabilities</span>
+          <h2 className=" mt-5 font-display text-6xl lg:text-7xl text-white leading-[0.95]">
             Every part of your<br /> resume, <em className="text-gradient not-italic">interrogated</em>.
           </h2>
         </motion.div>

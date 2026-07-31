@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
-dotenv.config();
-
 import OpenAI from "openai";
 
+dotenv.config();
+
 const client = new OpenAI({
-  apiKey: process.env.GITHUB_TOKEN,
-  baseURL: "https://models.github.ai/inference",
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
 export default client;

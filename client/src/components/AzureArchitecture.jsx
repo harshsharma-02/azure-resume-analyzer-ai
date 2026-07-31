@@ -20,7 +20,7 @@ function AzureArchitecture() {
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7 }}
         >
-         <span className="eyebrow">— Architecture</span>
+         <span className="eyebrow"> Architecture</span>
         <h2 className="mt-5 font-display text-6xl lg:text-7xl text-white leading-[0.95]">
           Cloud native.<br /><em className="text-gradient not-italic italic">Enterprise safe.</em>
         </h2>

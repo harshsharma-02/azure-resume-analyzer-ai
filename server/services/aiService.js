@@ -1,8 +1,66 @@
 import client from "../services/aiClient.js";
 
+const MODEL = process.env.GROQ_MODEL;
+
+/**
+ * Generic Groq request handler
+ */
+async function generateAIResponse(prompt) {
+  const MAX_RETRIES = 3;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await client.chat.completions.create({
+        model: MODEL,
+        temperature: 0.2,
+        response_format: {
+          type: "json_object",
+        },
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an expert ATS recruiter and software engineering hiring manager. Always return ONLY valid JSON.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      });
+
+      const content = response.choices?.[0]?.message?.content;
+
+      if (!content) {
+        throw new Error("Empty response received from AI.");
+      }
+
+      const result = JSON.parse(content);
+
+      if (!result || typeof result !== "object") {
+        throw new Error("Invalid JSON returned by AI.");
+      }
+
+      return result;
+    } catch (error) {
+      console.error(
+        `Groq request failed (Attempt ${attempt}/${MAX_RETRIES})`
+      );
+      console.error(error);
+
+      if (attempt === MAX_RETRIES) {
+        throw new Error(error.message || "Groq request failed.");
+      }
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, attempt * 1000)
+      );
+    }
+  }
+}
+
 export const analyzeResumeAI = async (resumeAnalysis, extractedText) => {
-  try {
-    const prompt = `
+  const prompt = `
 You are a Senior Technical Recruiter, ATS Expert, and Software Engineering Hiring Manager.
 
 Analyze the following resume carefully.
@@ -18,25 +76,17 @@ ${extractedText}
 Return ONLY valid JSON in exactly this format:
 
 {
-  "strengths": [
-    "string"
-  ],
-  "weaknesses": [
-    "string"
-  ],
-  "missingSkills": [
-    "string"
-  ],
-  "improvements": [
-    "string"
-  ],
+  "strengths": [],
+  "weaknesses": [],
+  "missingSkills": [],
+  "improvements": [],
   "skillRatings": [
     {
       "name": "React.js",
       "score": 92
     }
   ],
-  "recruiterSummary": "string",
+  "recruiterSummary": "",
   "overallRating": 0,
   "hiringProbability": 0
 }
@@ -50,7 +100,7 @@ Rules:
 5. overallRating should be between 1 and 10.
 6. hiringProbability should be between 0 and 100.
 7. skillRatings should include EVERY technical skill detected in the resume.
-8. Estimate the score based on evidence in projects, internship, certifications and experience.
+8. Estimate the score based on evidence in projects, internships, certifications and experience.
 9. Use this scale:
    90-100 = Excellent practical experience
    75-89 = Strong working knowledge
@@ -61,43 +111,33 @@ Rules:
 11. Return ONLY valid JSON.
 `;
 
-    const response = await client.chat.completions.create({
-      model: process.env.GITHUB_MODEL,
-      temperature: 0.2,
-      response_format: {
-        type: "json_object",
-      },
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an expert ATS recruiter. Always return valid JSON only.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
+  const result = await generateAIResponse(prompt);
 
-    // console.log(response.choices[0].message.content);
-    return JSON.parse(response.choices[0].message.content);
-  } catch (error) {
-    console.error("AI Error:", error.response?.data || error.message);
-    throw error;
+  if (
+    !Array.isArray(result.strengths) ||
+    !Array.isArray(result.weaknesses) ||
+    !Array.isArray(result.missingSkills) ||
+    !Array.isArray(result.improvements) ||
+    !Array.isArray(result.skillRatings) ||
+    typeof result.recruiterSummary !== "string" ||
+    typeof result.overallRating !== "number" ||
+    typeof result.hiringProbability !== "number"
+  ) {
+    throw new Error("AI returned an invalid resume analysis.");
   }
+
+  return result;
 };
 
 export const compareResumeWithJob = async (
   resumeAnalysis,
   extractedText,
-  jobDescription,
+  jobDescription
 ) => {
-  try {
-    const prompt = `
+  const prompt = `
 You are an ATS and Technical Recruiter.
 
-Compare this resume with the job description.
+Compare this resume with the following Job Description.
 
 Parsed Resume:
 
@@ -121,33 +161,24 @@ Return ONLY valid JSON in exactly this format:
 }
 
 Rules:
-1. matchPercentage should be between 0 and 100.
-2. matchedSkills should only contain skills present in both resume and JD.
-3. missingSkills should contain skills required by the JD but missing from the resume.
+
+1. matchPercentage must be between 0 and 100.
+2. matchedSkills should only contain skills present in both the resume and the job description.
+3. missingSkills should contain only skills required by the job description.
 4. recommendations should contain 3 to 5 practical improvements.
+5. Return ONLY valid JSON.
 `;
 
-    const response = await client.chat.completions.create({
-      model: process.env.GITHUB_MODEL,
-      temperature: 0.2,
-      response_format: {
-        type: "json_object",
-      },
-      messages: [
-        {
-          role: "system",
-          content: "You are an ATS recruiter. Return valid JSON only.",
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    });
+  const result = await generateAIResponse(prompt);
 
-    return JSON.parse(response.choices[0].message.content);
-  } catch (error) {
-    console.error("Job Match Error:", error.response?.data || error.message);
-    throw error;
+  if (
+    typeof result.matchPercentage !== "number" ||
+    !Array.isArray(result.matchedSkills) ||
+    !Array.isArray(result.missingSkills) ||
+    !Array.isArray(result.recommendations)
+  ) {
+    throw new Error("AI returned an invalid job comparison.");
   }
+
+  return result;
 };

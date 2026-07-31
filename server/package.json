@@ -13,6 +13,7 @@
   "type": "module",
   "dependencies": {
     "@azure/storage-blob": "^12.33.0",
+    "@google/genai": "^2.15.0",
     "bcryptjs": "^3.0.3",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
@@ -25,7 +26,7 @@
     "mongoose": "^9.8.0",
     "multer": "^2.2.0",
     "natural": "^8.1.1",
-    "openai": "^6.49.0",
+    "openai": "^7.2.0",
     "pdf-parse": "^2.4.5"
   },
   "devDependencies": {

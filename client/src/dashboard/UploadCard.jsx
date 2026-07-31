@@ -8,7 +8,7 @@ function UploadCard({ refreshResumes }){
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState("");
   const [fileName, setFileName] = useState("");
-
+console.log(import.meta.env.VITE_API_URL);
   const handleUpload = async (file) => {
     try {
       setUploading(true);

@@ -17,7 +17,7 @@ function AnalysisPreview() {
   return (
     <section id="preview" className="relative mx-auto max-w-7xl px-6 lg:px-8 section">
       <div className="max-w-2xl ml-120">
-        <span className="eyebrow">- Live preview -</span>
+        <span className="eyebrow">Live preview</span>
         <h2 className="mt-5 font-display text-6xl lg:text-7xl text-white leading-[0.95]">
           What your report<br />
           <em className="text-gradient not-italic italic">actually looks</em> like.

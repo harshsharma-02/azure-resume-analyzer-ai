@@ -20,7 +20,7 @@ function HowItWorks() {
         transition={{ duration: 0.7 }}
         
       >
-        <span className="eyebrow">— Workflow</span>
+        <span className="eyebrow">Workflow</span>
         <h2 className="mt-5 font-display text-6xl lg:text-7xl text-white leading-[0.95]">
           From upload to <em className="text-gradient not-italic italic">offer-ready</em><br />in four calm steps.
         </h2>
@@ -40,9 +40,9 @@ function HowItWorks() {
         {/* Connecting line */}
         <div className="hidden lg:block absolute top-[52px] left-[-5%] right-[0%] h-px bg-gradient-to-r from-transparent via-[#4a7dff]/40 to-transparent" />
 
-        <div className="grid gap-40 lg:grid-cols-4">
+        <div className="grid gap-40 lg:grid-cols-4 ">
           {steps.map((step, index) => (
-            <motion.div
+            <motion.div 
               key={step.title}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}

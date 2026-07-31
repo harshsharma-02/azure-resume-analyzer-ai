@@ -6,7 +6,7 @@ import {
 } from "@hugeicons/core-free-icons";
 function Footer() {
   return (
-    <footer className="page-container relative pb-5 pt-10 border-t border-white/5 bg-[#050914]/60 backdrop-blur-xl">
+    <footer className="page-container relative mt-40 pb-5 pt-10 border-t border-white/5 bg-[#050914]/60 backdrop-blur-xl">
      <div className="mx-auto w-full max-w-[1500px] px-8 xl:px-12">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
@@ -76,7 +76,7 @@ function Footer() {
           <p className="font-mono text-xs text-[#ffffff]">
             © 2026 HireSense Ai · Built with Azure OpenAI
           </p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 ">
             {[
               {
                 icon: Github01FreeIcons,
@@ -84,7 +84,7 @@ function Footer() {
               },
               {
                 icon: TwitterFreeIcons,
-                href: "https://x.com/yourusername",
+                href: "#",
               },
               {
                 icon: Linkedin01FreeIcons,
@@ -96,7 +96,7 @@ function Footer() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#a5b4d0] hover:text-white hover:border-white/25 transition"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-[#a5b4d0] hover:text-white hover:border-white/25 transition hover-lift"
               >
                 <HugeiconsIcon icon={icon} size={18} strokeWidth={1.8} />
               </a>
