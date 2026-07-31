@@ -4,6 +4,14 @@ import autoTable from "jspdf-autotable";
 export default function generateReport(resume) {
   const doc = new jsPDF();
 
+  const cleanText = (text = "") =>
+    String(text)
+      .replace(/[\u0000-\u001F\u007F-\u009F]/g, "")
+      .replace(/\u00AD/g, "")
+      .replace(/\u2011/g, "-")
+      .replace(/\s+/g, " ")
+      .trim();
+
   const ai = resume?.aiFeedback || {};
   const analysis = resume?.analysis || {};
   const jobMatch = resume?.jobMatch || {};
@@ -38,9 +46,6 @@ export default function generateReport(resume) {
   autoTable(doc, {
     startY: 55,
     theme: "grid",
-    headStyles: {
-      fillColor: [31, 41, 55],
-    },
     head: [["Field", "Value"]],
     body: [
       ["Name", analysis.personalInfo?.name || "-"],
@@ -55,14 +60,31 @@ export default function generateReport(resume) {
   doc.text("Overall Scores", 20, doc.lastAutoTable.finalY + 15);
 
   autoTable(doc, {
+    styles: {
+      font: "helvetica",
+      fontSize: 10,
+      cellPadding: 3,
+      overflow: "linebreak",
+      valign: "middle",
+      tableWidth: "wrap",
+      halign: "left",
+    },
     startY: doc.lastAutoTable.finalY + 20,
     head: [["Metric", "Value"]],
     body: [
-      ["⭐ Resume Rating", `${ai.overallRating || "-"}/10`],
+      ["Resume Rating", `${ai.overallRating || "-"}/10`],
 
-      ["📈 Hiring Probability", `${ai.hiringProbability || 0}%`],
+      ["Hiring Probability", `${ai.hiringProbability || 0}%`],
 
-      ["🎯 Job Match", `${jobMatch.matchPercentage || 0}%`],
+      [
+        "Job Match",
+        `${
+          jobMatch.matchPercentage ??
+          jobMatch.score ??
+          jobMatch.matchScore ??
+          "-"
+        }%`,
+      ],
     ],
   });
 
@@ -71,8 +93,18 @@ export default function generateReport(resume) {
   doc.text("Technical Skills", 20, doc.lastAutoTable.finalY + 15);
 
   autoTable(doc, {
+    styles: {
+      font: "helvetica",
+      fontSize: 10,
+      cellPadding: 3,
+      overflow: "linebreak",
+      valign: "middle",
+      tableWidth: "wrap",
+      halign: "left",
+    },
+
     startY: doc.lastAutoTable.finalY + 20,
-    body: [[(analysis.skills?.technical || []).join("   •   ")]],
+    body: (analysis.skills?.technical || []).map((skill) => [skill]),
   });
 
   // Strengths
@@ -80,6 +112,15 @@ export default function generateReport(resume) {
   doc.text("Strengths", 20, doc.lastAutoTable.finalY + 15);
 
   autoTable(doc, {
+    styles: {
+      font: "helvetica",
+      fontSize: 10,
+      cellPadding: 3,
+      overflow: "linebreak",
+      valign: "middle",
+      tableWidth: "wrap",
+      halign: "left",
+    },
     startY: doc.lastAutoTable.finalY + 20,
     body: (ai.strengths || []).map((item) => [item]),
   });
@@ -89,6 +130,15 @@ export default function generateReport(resume) {
   doc.text("Weaknesses", 20, doc.lastAutoTable.finalY + 15);
 
   autoTable(doc, {
+    styles: {
+      font: "helvetica",
+      fontSize: 10,
+      cellPadding: 3,
+      overflow: "linebreak",
+      valign: "middle",
+      tableWidth: "wrap",
+      halign: "left",
+    },
     startY: doc.lastAutoTable.finalY + 20,
     body: (ai.weaknesses || []).map((item) => [item]),
   });
@@ -98,8 +148,20 @@ export default function generateReport(resume) {
   doc.text("Missing Skills", 20, doc.lastAutoTable.finalY + 15);
 
   autoTable(doc, {
+    styles: {
+      font: "helvetica",
+      fontSize: 10,
+      cellPadding: 3,
+      overflow: "linebreak",
+      valign: "middle",
+      tableWidth: "wrap",
+      halign: "left",
+    },
     startY: doc.lastAutoTable.finalY + 20,
-    body: (jobMatch.missingSkills || []).map((item) => [item]),
+    body: (ai.missingSkills?.length
+      ? ai.missingSkills
+      : jobMatch.missingSkills || []
+    ).map((item) => [cleanText(item)]),
   });
 
   // Recommendations
@@ -107,52 +169,27 @@ export default function generateReport(resume) {
   doc.text("AI Recommendations", 20, doc.lastAutoTable.finalY + 15);
 
   autoTable(doc, {
+    styles: {
+      font: "helvetica",
+      fontSize: 10,
+      cellPadding: 3,
+      overflow: "linebreak",
+      valign: "middle",
+      tableWidth: "wrap",
+      halign: "left",
+    },
     startY: doc.lastAutoTable.finalY + 20,
     body: (ai.improvements || jobMatch.recommendations || []).map((item) => [
       item,
     ]),
   });
 
-  doc.setFontSize(16);
-  doc.setTextColor(37, 99, 235);
-
-  doc.text("Executive Summary", 20, doc.lastAutoTable.finalY + 15);
-
-  const summary = `This resume received an overall rating of ${
-    ai.overallRating || "-"
-  }/10 with an estimated hiring probability of ${
-    ai.hiringProbability || 0
-  }%. The profile demonstrates ${
-    ai.strengths?.[0]?.toLowerCase() || "good technical skills"
-  }. Focus on ${
-    ai.weaknesses?.[0]?.toLowerCase() || "continuous improvement"
-  } to improve interview chances.`;
-
-  doc.setFontSize(11);
-
-  doc.setTextColor(70);
-
-  doc.text(summary, 20, doc.lastAutoTable.finalY + 23, {
-    maxWidth: 170,
-  });
-
   // Footer
-  doc.setDrawColor(220);
-
-  doc.line(20, 280, 190, 280);
-
-  doc.setFontSize(9);
-
+  doc.setFontSize(10);
   doc.setTextColor(120);
-
-  doc.text(
-    "Generated by HireSense AI | AI Powered Resume Intelligence",
-    105,
-    286,
-    {
-      align: "center",
-    },
-  );
+  doc.text("Generated by HireSense Ai ", 105, 285, {
+    align: "center",
+  });
 
   doc.save("Resume-Analysis-Report.pdf");
 }

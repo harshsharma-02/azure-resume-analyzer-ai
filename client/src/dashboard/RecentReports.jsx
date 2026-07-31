@@ -1,5 +1,8 @@
 import ReportCard from "./ReportCard";
 import { deleteResume } from "../services/resumeAPI";
+import toast from "react-hot-toast";
+import { confirmDelete } from "../components/confirmDelete";
+import generateReport from "../utils/generateReport";
 
 function RecentReports({
   resumes = [],
@@ -11,7 +14,7 @@ function RecentReports({
   const items = resumes?.length ? resumes : reports;
 
   const handleDelete = async (resume) => {
-    const confirmed = window.confirm(`Delete "${resume.originalName}"?`);
+    const confirmed = await confirmDelete(`Delete "${resume.originalName}"?`);
 
     if (!confirmed) return;
 
@@ -25,10 +28,12 @@ function RecentReports({
       await deleteResume(resume._id);
 
       await refreshResumes();
+
+      toast.success("Resume deleted successfully.");
     } catch (err) {
       console.error(err);
 
-      alert(
+      toast.error(
         err.response?.data?.message ||
           err.message ||
           "Failed to delete resume.",
@@ -91,6 +96,7 @@ function RecentReports({
                   }
                   active={isActive}
                   onDelete={() => handleDelete(resume)}
+                  onDownload={() => generateReport(resume)}
                 />
               </div>
             );

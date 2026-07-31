@@ -1,40 +1,34 @@
 const normalizeSkill = (skill) => {
+  let normalized = skill
+    .toLowerCase()
+    .trim()
+    .replace(/[.\s_-]/g, "");
 
-    let normalized = skill
-        .toLowerCase()
-        .trim()
-        .replace(/[.\s_-]/g, "");
+  const aliases = {
+    reactjs: "react",
 
+    "react.js": "react",
 
-    const aliases = {
+    nodejs: "node",
 
-        "reactjs": "react",
+    "node.js": "node",
 
-        "react.js": "react",
+    expressjs: "express",
 
-        "nodejs": "node",
+    "express.js": "express",
 
-        "node.js": "node",
+    mongodb: "mongodb",
 
-        "expressjs": "express",
+    mongodb: "mongodb",
 
-        "express.js": "express",
+    tailwindcss: "tailwind",
 
-        "mongodb": "mongodb",
+    html5: "html",
 
-        "mongodb": "mongodb",
+    css3: "css",
+  };
 
-        "tailwindcss": "tailwind",
-
-        "html5": "html",
-
-        "css3": "css"
-
-    };
-
-
-    return aliases[skill.toLowerCase().trim()] || normalized;
-
+  return aliases[skill.toLowerCase().trim()] || normalized;
 };
 
 export const evaluateResume = (resumeAnalysis, jobData) => {
@@ -56,47 +50,27 @@ export const evaluateResume = (resumeAnalysis, jobData) => {
 
   let projectScore = 0;
 
-const projectMatches = [];
+  const projectMatches = [];
 
-
-resumeAnalysis.projects.forEach(project => {
-
-
+  resumeAnalysis.projects.forEach((project) => {
     const projectContent = (
-
-        project.name +
-        " " +
-        project.description +
-        " " +
-        (project.technologies || []).join(" ")
-
+      project.name +
+      " " +
+      project.description +
+      " " +
+      (project.technologies || []).join(" ")
     ).toLowerCase();
 
+    requiredSkills.forEach((skill) => {
+      if (projectContent.includes(skill)) {
+        projectMatches.push(`${project.name} uses ${skill}`);
 
-
-    requiredSkills.forEach(skill => {
-
-
-        if(projectContent.includes(skill)){
-
-
-            projectMatches.push(
-                `${project.name} uses ${skill}`
-            );
-
-
-            projectScore += 5;
-
-        }
-
-
+        projectScore += 5;
+      }
     });
+  });
 
-
-});
-
-
-projectScore = Math.min(projectScore,20);
+  projectScore = Math.min(projectScore, 20);
   // EXPERIENCE
 
   let experienceScore = 0;

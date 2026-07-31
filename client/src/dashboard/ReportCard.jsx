@@ -1,7 +1,15 @@
 import { FileText, ArrowUpRight, CheckCircle2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
-function ReportCard({ file, score, date, active = false, onDelete }) {
+function ReportCard({
+  file,
+  score,
+  date,
+  active = false,
+  onDelete,
+  onDownload,
+}) {
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
@@ -63,22 +71,28 @@ function ReportCard({ file, score, date, active = false, onDelete }) {
           <div className="font-display text-2xl text-gradient">{score}</div>
         </div>
 
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete();
-          }}
-          className={`
-            flex h-9 w-9 items-center justify-center rounded-xl border transition
-            ${
-              active
-                ? "border-cyan-400/30 bg-cyan-500/10 text-cyan-300"
-                : "border-white/10 bg-white/5 text-[#a5b4d0] hover:border-white/25 hover:text-white"
-            }
-          `}
-        >
-          <ArrowUpRight size={15} />
-        </button>
+       <button
+  onClick={(e) => {
+    e.stopPropagation();
+
+    if (!onDownload) {
+      return toast.error("No report available to download.");
+    }
+
+    toast.success("Downloading report...");
+    onDownload();
+  }}
+  className={`
+    flex h-9 w-9 items-center justify-center rounded-xl border transition hover-lift
+    ${
+      active
+        ? "border-cyan-400/30 bg-cyan-500/10 text-cyan-300"
+        : "border-white/10 bg-white/5 text-[#a5b4d0] hover:border-white/25 hover:text-white"
+    }
+  `}
+>
+  <ArrowUpRight size={15} />
+</button>
 
         <button
           onClick={(e) => {

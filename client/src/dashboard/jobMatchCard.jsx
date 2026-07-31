@@ -3,6 +3,7 @@ import API from "../api/axios";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { CheckCircle2, XCircle, Sparkles, Briefcase } from "lucide-react";
+import toast from "react-hot-toast";
 
 function JobMatchCard({ resume }) {
   const [jobDescription, setJobDescription] = useState("");
@@ -10,15 +11,33 @@ function JobMatchCard({ resume }) {
   const [result, setResult] = useState(null);
 
   const handleCompare = async () => {
-    if (!resume?._id) return;
-    if (!jobDescription.trim()) return alert("Paste a Job Description first.");
+    if (!resume?._id) {
+      return toast.error("Please select a resume first.");
+    }
+
+    if (!jobDescription.trim()) {
+      return toast.error("Paste a Job Description first.");
+    }
+
+    const toastId = toast.loading("Comparing resume with job description...");
+
     try {
       setLoading(true);
-      const response = await API.post(`/resume/${resume._id}/job-match`, { jobDescription });
+
+      const response = await API.post(`/resume/${resume._id}/job-match`, {
+        jobDescription,
+      });
+
       setResult(response.data.jobMatch);
       resume.jobMatch = response.data.jobMatch;
+
+      toast.success("Comparison completed successfully!", {
+        id: toastId,
+      });
     } catch (error) {
-      alert(error.response?.data?.message || "Comparison failed.");
+      toast.error(error.response?.data?.message || "Comparison failed.", {
+        id: toastId,
+      });
     } finally {
       setLoading(false);
     }
@@ -40,29 +59,32 @@ function JobMatchCard({ resume }) {
   };
 
   return (
-    <div className="glass p-8 hover-lift">
+    <div className="glass p-8 hover-lift ">
       <div className="flex items-center gap-3 justify-center ">
         <Briefcase className="text-[#7ea8ff]" size={30} />
         <div>
           <div className="eyebrow text-6xl">- Compare -</div>
-          <h2 className="mt-10 font-display text-3xl text-white">Resume vs Job Description</h2>
+          <h2 className="mt-10 font-display text-3xl text-white">
+            Resume vs Job Description
+          </h2>
         </div>
       </div>
 
       <textarea
+        disabled={loading}
         rows={7}
         value={jobDescription}
         onChange={(e) => setJobDescription(e.target.value)}
         placeholder="Paste any Job Description here…"
-        className="mt-6 w-full rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-sm leading-7 text-white placeholder:text-[#5a6d92] font-sans resize-none"
+        className="mt-6 w-full rounded-2xl border border-white/10 bg-white/[0.04] p-5 text-sm leading-7 text-white placeholder:text-[#5a6d92] font-sans resize-none disabled:opacity-60 disabled:cursor-not-allowed scrollbar-none"
       />
 
       <button
         onClick={handleCompare}
         disabled={loading}
-        className="btn-primary mt-4 !text-sm disabled:opacity-60"
+        className="btn-primary mt-4 !text-sm disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
       >
-        {loading ? "AI Comparing…" : "Compare Resume"}
+        {loading ? "Analyzing Match..." : "Compare Resume"}
         <Sparkles size={16} />
       </button>
 
@@ -81,7 +103,12 @@ function JobMatchCard({ resume }) {
                 })}
               />
             </div>
-            <p className="mt-4 font-display text-2xl" style={{ color: getColor() }}>{getLabel()}</p>
+            <p
+              className="mt-4 font-display text-2xl"
+              style={{ color: getColor() }}
+            >
+              {getLabel()}
+            </p>
           </div>
 
           <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -91,7 +118,12 @@ function JobMatchCard({ resume }) {
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {result.matchedSkills.map((s) => (
-                  <span key={s} className="rounded-full border border-[#34d399]/25 bg-[#34d399]/10 px-3 py-1 text-[11px] font-mono text-[#86efac]">{s}</span>
+                  <span
+                    key={s}
+                    className="rounded-full border border-[#34d399]/25 bg-[#34d399]/10 px-3 py-1 text-[11px] font-mono text-[#86efac]"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
@@ -101,7 +133,12 @@ function JobMatchCard({ resume }) {
               </div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {result.missingSkills.map((s) => (
-                  <span key={s} className="rounded-full border border-[#f87171]/25 bg-[#f87171]/10 px-3 py-1 text-[11px] font-mono text-[#fca5a5]">{s}</span>
+                  <span
+                    key={s}
+                    className="rounded-full border border-[#f87171]/25 bg-[#f87171]/10 px-3 py-1 text-[11px] font-mono text-[#fca5a5]"
+                  >
+                    {s}
+                  </span>
                 ))}
               </div>
             </div>
@@ -113,7 +150,10 @@ function JobMatchCard({ resume }) {
             </div>
             <div className="mt-4 grid gap-3">
               {result.recommendations.map((item, index) => (
-                <div key={index} className="rounded-2xl border-l-2 border-[#7ea8ff] bg-white/[0.03] p-4 text-sm text-[#dbe4ff]">
+                <div
+                  key={index}
+                  className="rounded-2xl border-l-2 border-[#7ea8ff] bg-white/[0.03] p-4 text-sm text-[#dbe4ff]"
+                >
                   {item}
                 </div>
               ))}

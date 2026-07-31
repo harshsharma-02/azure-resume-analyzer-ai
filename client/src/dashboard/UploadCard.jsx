@@ -3,31 +3,67 @@ import { useDropzone } from "react-dropzone";
 import { UploadCloud, FileCheck2 } from "lucide-react";
 import { motion } from "framer-motion";
 import API from "../api/axios";
+import toast from "react-hot-toast";
 
-function UploadCard({ refreshResumes }){
+function UploadCard({ refreshResumes }) {
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState("");
   const [fileName, setFileName] = useState("");
-console.log(import.meta.env.VITE_API_URL);
+  console.log(import.meta.env.VITE_API_URL);
   const handleUpload = async (file) => {
+    const loadingToast = toast.loading("Uploading resume...");
+
     try {
       setUploading(true);
-      setStatus("Uploading resume");
       setFileName(file.name);
+
+      setStatus("Uploading resume");
+
       const formData = new FormData();
       formData.append("resume", file);
+
       const uploadResponse = await API.post("/resume/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
+
       const resumeId = uploadResponse.data.resume._id;
+
+      toast.loading("Analyzing resume...", {
+        id: loadingToast,
+      });
+
       setStatus("Analyzing resume");
+
       await API.post(`/resume/analyze/${resumeId}`);
-      setStatus("Generating AI feedback…");
+
+      toast.loading("Generating AI feedback...", {
+        id: loadingToast,
+      });
+
+      setStatus("Generating AI feedback");
+
       await API.post(`/ai/${resumeId}`);
+
       await refreshResumes();
+
       setStatus("Resume analyzed successfully");
+
+      toast.success("Resume analyzed successfully!", {
+        id: loadingToast,
+      });
     } catch (error) {
-      setStatus(error.response?.data?.message || error.message || "Something went wrong");
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Something went wrong";
+
+      setStatus(message);
+
+      toast.error(message, {
+        id: loadingToast,
+      });
     } finally {
       setUploading(false);
     }
@@ -41,25 +77,34 @@ console.log(import.meta.env.VITE_API_URL);
 
   return (
     <motion.div
-      {...getRootProps()}
+      {...(!uploading ? getRootProps() : {})}
       whileHover={{ y: -3 }}
       data-testid="upload-card"
       className={`glass hover-lift cursor-pointer p-8 text-center  transition ${
         isDragActive ? "!border-[#7ea8ff] bg-[#7ea8ff]/5" : ""
       }`}
-      
     >
       <input {...getInputProps()} />
 
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[#4a7dff]/20 to-[#22d3ee]/20 border border-white/10 relative">
         <UploadCloud size={28} className="text-[#7ea8ff]" />
-        {!uploading && <span className="absolute inset-0 rounded-2xl pulse-ring" />}
+        {!uploading && (
+          <span className="absolute inset-0 rounded-2xl pulse-ring" />
+        )}
       </div>
 
       <h2 className="mt-6 font-display text-3xl text-white">Upload Resume</h2>
-      <p className="mt-2 text-sm text-[#a5b4d0]">Drag & drop your PDF here, or click to browse</p>
+      <p className="mt-2 text-sm text-[#a5b4d0]">
+        Drag & drop your PDF here, or click to browse
+      </p>
 
-      <button type="button" className="btn-primary mt-6 mx-auto !py-3 !text-sm">Browse files</button>
+      <button
+        type="button"
+        disabled={uploading}
+        className="btn-primary mt-6 mx-auto !py-3 !text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+      >
+        {uploading ? "Processing..." : "Browse Files"}
+      </button>
 
       {fileName && (
         <div className="mt-6 inline-flex items-center gap-2 text-xs font-mono text-[#a5b4d0] bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
@@ -67,7 +112,10 @@ console.log(import.meta.env.VITE_API_URL);
         </div>
       )}
       {status && (
-        <p className="mt-4 text-sm text-[#67e8f9] font-mono">{status}{uploading && "…"}</p>
+        <p className="mt-4 text-sm text-[#67e8f9] font-mono">
+          {status}
+          {uploading && "…"}
+        </p>
       )}
     </motion.div>
   );

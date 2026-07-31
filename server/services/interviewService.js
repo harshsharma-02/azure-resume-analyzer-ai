@@ -83,7 +83,7 @@ Rules:
 `;
 
     const response = await client.chat.completions.create({
-      model: process.env.GITHUB_MODEL,
+      model: process.env.GROQ_MODEL,
       temperature: 0.3,
       response_format: {
         type: "json_object",
